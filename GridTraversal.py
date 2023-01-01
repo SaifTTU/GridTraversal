@@ -1,0 +1,66 @@
+class Room:
+    def __init__(self, id, name, north, east, south, west):
+        self.id = id
+        self.name = name
+        self.north = north
+        self.east = east
+        self.south = south
+        self.west = west
+
+def create_rooms():
+    global rooms
+    rooms = {}
+    id = 1
+    for x in range(10):
+        for y in range(10):
+            rooms[(x, y)] = Room(id, (x, y), None, None, None, None)
+            id += 1
+
+    for coords in rooms:
+        x, y = coords
+        # Set room references
+        if (x > 0):
+            rooms[coords].west = rooms[(x-1, y)]
+        if (x < 9):
+            rooms[coords].east = rooms[(x+1, y)]
+        if (y > 0):
+            rooms[coords].north = rooms[(x, y-1)]
+        if (y < 9):
+            rooms[coords].south = rooms[(x, y+1)]
+
+create_rooms()
+
+# Test room reference
+current_room = rooms[(0, 0)]
+while True:
+    # Display the grid
+    for y in range(10):
+        for x in range(10):
+            if (x, y) == current_room.name:
+                print("O", end=" ")
+            else:
+                print(".", end=" ")
+        print()
+
+    print("You are currently in the {current_room.name} room (ID: {current_room.id}).")
+    print("You can go:")
+    if current_room.north is not None:
+        print("North")
+    if current_room.east is not None:
+        print("East")
+    if current_room.south is not None:
+        print("South")
+    if current_room.west is not None:
+        print("West")
+    print("Where would you like to go?")
+    direction = input("> ")
+    if direction == "North":
+        current_room = current_room.north
+    elif direction == "East":
+        current_room = current_room.east
+    elif direction == "South":
+        current_room = current_room.south
+    elif direction == "West":
+        current_room = current_room.west
+    else:
+        print("Invalid direction.")
